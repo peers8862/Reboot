@@ -4,7 +4,7 @@
 
 layout: home
 ---
-[Submit New Page](https://github.com/peers8862/peers8862.github.io/issues/new?template=content_form.yml) - Add your own content to this site!
+[Submit New Page](https://github.com/peers8862/reboot/issues/new?template=content_form.yml) - Add your own content to this site!
 
 <h2>Site Pages</h2>
 <ul>
