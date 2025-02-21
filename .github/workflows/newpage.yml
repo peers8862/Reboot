@@ -1,0 +1,31 @@
+name: Generate Page from Issue
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  generate_page:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create Markdown File
+        run: |
+          TITLE=$(echo "${{ github.event.issue.title }}" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+          FILE="_pages/${TITLE}.md"
+          echo "---" > $FILE
+          echo "layout: topic" >> $FILE
+          echo "title: \"${{ github.event.issue.title }}\"" >> $FILE
+          echo "description: \"${{ github.event.issue.body }}\"" >> $FILE
+          echo "permalink: /topics/${TITLE}/" >> $FILE
+          echo "---" >> $FILE
+          echo "${{ github.event.issue.body }}" >> $FILE
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add _pages/*.md
+          git commit -m "Auto-generate page from issue: ${{ github.event.issue.title }}"
+          git push
