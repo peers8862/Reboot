@@ -2,6 +2,9 @@ name: Generate Page from Issue
 on:
   issues:
     types: [opened]
+    
+permissions:
+  contents: write  # Grants write access to repository contents
 
 jobs:
   generate_page:
