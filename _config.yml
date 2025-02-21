@@ -43,5 +43,5 @@ plugins:
 collections:
   pages:
     output: true
-    permalink: /topics/:path/
+    permalink: /:path/
 
