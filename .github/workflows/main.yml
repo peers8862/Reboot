@@ -1,0 +1,34 @@
+name: Create Page from Discussion
+
+on:
+  discussion:
+    types: [created]
+
+jobs:
+  create-page:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create New Page
+        run: |
+          DISCUSSION_TITLE="${{ github.event.discussion.title }}"
+          DISCUSSION_SLUG=$(echo "$DISCUSSION_TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
+          PAGE_FILE="_pages/$DISCUSSION_SLUG.md"
+          mkdir -p _pages
+          echo "---" > $PAGE_FILE
+          echo "layout: page" >> $PAGE_FILE
+          echo "title: \"$DISCUSSION_TITLE\"" >> $PAGE_FILE
+          echo "permalink: /$DISCUSSION_SLUG/" >> $PAGE_FILE
+          echo "---" >> $PAGE_FILE
+          echo "" >> $PAGE_FILE
+          echo "${{ github.event.discussion.body }}" >> $PAGE_FILE
+
+      - name: Commit New Page
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add _pages/*.md
+          git commit -m "Add page for discussion: ${{ github.event.discussion.title }}"
+          git push
