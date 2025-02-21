@@ -1,0 +1,49 @@
+name: Create Page from Issue
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  create-page:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'new-page'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Parse Issue and Create Page
+        run: |
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+          ISSUE_BODY="${{ github.event.issue.body }}"
+          SLUG=$(echo "$ISSUE_TITLE" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
+          if [[ "$ISSUE_BODY" =~ Slug:[[:space:]]*(.*) ]]; then
+            SLUG="${BASH_REMATCH[1]}"
+          fi
+          PAGE_FILE="_pages/$SLUG.md"
+          mkdir -p _pages
+          echo "---" > "$PAGE_FILE"
+          echo "layout: page" >> "$PAGE_FILE"
+          echo "title: \"$ISSUE_TITLE\"" >> "$PAGE_FILE"
+          echo "permalink: /$SLUG/" >> "$PAGE_FILE"
+          echo "---" >> "$PAGE_FILE"
+          echo "$ISSUE_BODY" | sed '/---/q' | sed '1,3d' >> "$PAGE_FILE"
+
+      - name: Commit New Page
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add _pages/*.md
+          git commit -m "Add page from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Close Issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: "open"
+            })

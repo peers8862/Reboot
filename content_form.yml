@@ -1,0 +1,27 @@
+name: Submit New Challenge
+description: Use this form to create publicly post a technical challenge.
+title: "[New Page] <Enter Title Here>"
+labels: ["new-page"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Page Title
+      description: The title of the new page.
+      placeholder: "My New Page"
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: Page Content
+      description: Write the content in Markdown.
+      placeholder: "Describe the challenge here..."
+    validations:
+      required: true
+  - type: input
+    id: slug
+    attributes:
+      label: Slug (URL-friendly name)
+      description: Optional; defaults to title if blank.
+      placeholder: "my-new-page"
