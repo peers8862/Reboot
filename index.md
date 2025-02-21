@@ -4,7 +4,7 @@
 
 layout: home
 ---
-[Submit an Issue](https://github.com/peers8862/reboot/issues/new?template=content_form.yml) - Share a technical issue that needs a fresh reboot.
+[Submit an Issue](https://github.com/peers8862/reboot/issues/new?template=content_form.yml) - Share a technical challenge that needs a reboot.
 
 <h2>PAGES</h2>
 <ul>
