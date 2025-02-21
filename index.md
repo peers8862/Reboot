@@ -4,9 +4,9 @@
 
 layout: home
 ---
-[Submit New Page](https://github.com/peers8862/reboot/issues/new?template=content_form.yml) - Add your own content to this site!
+[Submit an Issue](https://github.com/peers8862/reboot/issues/new?template=content_form.yml) - Share a technical issue that needs a fresh reboot.
 
-<h2>Site Pages</h2>
+<h2>PAGES</h2>
 <ul>
   {% for page in site.pages %}
     {% if page.path contains '_pages/' %}
