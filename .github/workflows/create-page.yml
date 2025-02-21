@@ -1,4 +1,4 @@
-name: Create Page from Discussion
+name: Create Page from Issue
 
 on:
   discussion:
