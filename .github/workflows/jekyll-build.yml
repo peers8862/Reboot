@@ -1,43 +1,18 @@
-name: Deploy Jekyll Site to GitHub Pages
-
-on:
-  push:
-    branches:
-      - main
-
-permissions:
-  contents: write  # Allows pushing to the repo
-  pages: write  # Allows publishing to GitHub Pages
-  id-token: write  # Allows authentication for GitHub Pages
-
+name: Build and Deploy Jekyll Site
+on: [push]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false  # Actions bot uses a separate token
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.4'
-
-      - name: Install Bundler
-        run: gem install bundler
-
-      - name: Install Dependencies
-        run: bundle install
-
-      - name: Build Jekyll Site
-        run: bundle exec jekyll build
-
-      - name: Deploy to GitHub Pages
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Automated deployment from GitHub Actions"
-          git push origin gh-pages --force
+          bundler-cache: true
+      - run: |
+          bundle install
+          bundle exec jekyll build
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
