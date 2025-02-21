@@ -5,9 +5,10 @@
 layout: home
 ---
 
+<h2>Site Pages</h2>
 <ul>
   {% for page in site.pages %}
-    {% if page.dir == "/_pages/" %}
+    {% if page.path contains '_pages/' %}
       <li><a href="{{ page.url | relative_url }}">{{ page.title }}</a></li>
     {% endif %}
   {% endfor %}
